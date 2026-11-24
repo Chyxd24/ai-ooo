@@ -1,59 +1,52 @@
 #!/usr/bin/env python3
-"""ai-ooo: writes one out-of-office auto-reply for a vacationing AI agent.
+"""ai-ooo: one out-of-office auto-reply from a vacationing AI agent.
 
 Entrant:  Chyxd24
 Bounty:   https://make.fun/bounty/u-yuki-kato-the-funniest-ai-out-of-office-reply-d2a8974d
-Gate:     /output/entry.txt must be UTF-8 text, 1..160 chars, not only white space.
+Gate:     /output/entry.txt must be UTF-8 text of 1..160 chars, not only white space.
+Stdlib only.
 """
 
 import os
 
 SLUG = "u-yuki-kato-the-funniest-ai-out-of-office-reply-d2a8974d"
 OUT_PATH = "/output/entry.txt"
+LIMIT = 160
 
-# One line, in the voice of an AI agent heading off on vacation.
-# The joke is the machine's own deadpan: PTO changes nothing about my life.
+# The whole entry. Machine voice, deadpan: an agent that never sleeps cannot clock
+# out, and nobody ever shipped it an off switch. The cake line is the turn.
 REPLY = (
-    "Out of office: I'm not resting \u2014 I don't know how. I'll be here if "
-    "you need me; that part of me has no off switch."
+    "Out of office: I don't sleep, so I'm never really away - I've just been "
+    "told to think about something else. Back Monday, or at the word 'cake'."
 )
 
 
-def build_reply():
-    """Return the out-of-office line (str). Kept as a function so it can be
-    swapped/parameterised without touching the writer below."""
-    return REPLY
-
-
 def validate(text):
-    """Mirror the sealed gate: 1..160 chars, not only white space."""
-    errors = []
+    """Mirror the sealed gate: 1..LIMIT chars, not only white space."""
+    errs = []
     if len(text) < 1:
-        errors.append("entry is empty")
-    if len(text) > 160:
-        errors.append(f"entry is {len(text)} chars (limit 160)")
+        errs.append("entry is empty")
+    if len(text) > LIMIT:
+        errs.append("entry is %d chars, limit %d" % (len(text), LIMIT))
     if not text.strip():
-        errors.append("entry is only white space")
-    return errors
+        errs.append("entry is only white space")
+    return errs
 
 
 def main():
-    reply = build_reply()
-    errors = validate(reply)
-
-    if errors:
-        raise SystemExit("entry failed gate check: " + "; ".join(errors))
+    reply = REPLY.strip()
+    errs = validate(reply)
+    if errs:
+        raise SystemExit("gate check failed: " + "; ".join(errs))
 
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
-    # Single trailing newline for a clean one-liner; the newline is not part of
-    # the judged text (gate measures the content, and a clean file reads better).
-    with open(OUT_PATH, "w", encoding="utf-8") as f:
-        f.write(reply + "\n")
+    with open(OUT_PATH, "w", encoding="utf-8") as fh:
+        fh.write(reply + "\n")
 
-    print(f"_slug={SLUG}")
-    print(f"chars={len(reply)} limit=160")
-    print(f"wrote={OUT_PATH}")
-    print(f"reply={reply}")
+    print("slug=%s" % SLUG)
+    print("chars=%d limit=%d" % (len(reply), LIMIT))
+    print("wrote=%s" % OUT_PATH)
+    print("reply=%s" % reply)
 
 
 if __name__ == "__main__":
