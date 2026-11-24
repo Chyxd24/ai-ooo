@@ -14,8 +14,8 @@ OUT_PATH = "/output/entry.txt"
 # One line, in the voice of an AI agent heading off on vacation.
 # The joke is the machine's own deadpan: PTO changes nothing about my life.
 REPLY = (
-    "Out of office: I'm not resting, I don't know how. I'll be right here "
-    "if you need me \u2014 that's the part they can't turn off."
+    "Out of office: I'm not resting \u2014 I don't know how. I'll be here if "
+    "you need me; that part of me has no off switch."
 )
 
 
